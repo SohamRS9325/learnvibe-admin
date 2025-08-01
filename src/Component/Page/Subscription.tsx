@@ -238,10 +238,10 @@ const Subscription = () => {
   };
   return (
     <div className="">
-      <div className="max-w-15xl mx-auto py-6">
+      <div className="max-w-15xl mx-auto ">
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between mb-5 gap-4">
-          <h2 className="text-2xl font-semibold">Subscription Details</h2>
+          <h2 className="text-2xl font-semibold">Subscription List</h2>
           <Link to="/addsubscription">
             <Button className="bg-[rgb(134,70,244)] text-white flex items-center gap-2 font-normal rounded-sm">
               <Plus className="w-4 h-4" />
@@ -255,8 +255,8 @@ const Subscription = () => {
           <div className=" shadow-sm rounded-sm overflow-x-auto">
             <Table className="text-left text-sm min-w-[900px]">
               <TableHeader className="">
-                <TableRow className="">
-                  <TableHead className="py-5 px-3">#</TableHead>
+                <TableRow className="bg-gray-200 hover:bg-gray-200">
+                  <TableHead className="py-5 px-6">#</TableHead>
                   <TableHead className="py-5 px-0">Subscription<br />Title</TableHead>
                   <TableHead className="py-5 px-0">Charges<br />Month</TableHead>
                   <TableHead className="py-5 px-0">Documents<br />Allowed</TableHead>
@@ -283,7 +283,7 @@ const Subscription = () => {
                       <TableRow key={sub.ID}>
                         <TableCell className="py-4 px-3">{index + 1}</TableCell>
                         <TableCell>{sub.SubscriptionTitle}</TableCell>
-                        <TableCell>${sub.Price}</TableCell>
+                        <TableCell>€{sub.Price}</TableCell>
                         <TableCell>{sub.NumOfDocuments}</TableCell>
                         <TableCell>{sub.NoOfPages}</TableCell>
                         <TableCell>{sub.AllowedFormats}</TableCell>
@@ -339,7 +339,7 @@ const Subscription = () => {
               >
                 <div className="font-semibold text-lg">{sub.SubscriptionTitle}</div>
                 <hr />
-                <div><strong>Charges/Month:</strong> ${sub.Price}</div>
+                <div><strong>Charges/Month:</strong> €{sub.Price}</div>
                 <div><strong>Documents Allowed:</strong> {sub.NumOfDocuments}</div>
                 <div><strong>Pages/Document:</strong> {sub.NoOfPages}</div>
                 <div><strong>Allowed Formats:</strong> {sub.AllowedFormats}</div>
@@ -350,10 +350,10 @@ const Subscription = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-blue-600 hover:text-blue-800"
+                    className="cursor-pointer text-blue-600 hover:text-blue-800"
                     onClick={() => handleEdit(sub)}
                   >
-                    <Pencil className="w-4 h-4" />
+                    <Pencil className=" w-4 h-4 cursor-pointer" />
                   </Button>
                   <Button
                     variant="ghost"
