@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Pagination,
   PaginationContent,
@@ -40,6 +40,7 @@ const Users = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   // const [searchQuery, setSearchQuery] = useState("");
+  console.log("selectedUser", selectedUser);
 
   const GetUsers = async (page = currentPage, limit = usersPerPage) => {
     setLoading(true);
@@ -86,8 +87,6 @@ const Users = () => {
   //   )} ${safeDecrypt(user.EmailID)}`.toLowerCase();
   //   return fullText.includes(searchQuery.toLowerCase());
   // });
-
-
   const handleDelete = async (id: string) => {
     try {
       const res = await deleteUser(id, token);
@@ -99,7 +98,10 @@ const Users = () => {
       console.error("Failed to delete user:", error);
     }
   };
-
+  const navigate = useNavigate()
+  const handleEdit = (sub: any) => {
+    navigate("/newusers", { state: { editMode: true, data: sub } });
+  };
   const handleEditClick = (user: any) => {
     setSelectedUser({
       _id: user._id,
@@ -109,7 +111,6 @@ const Users = () => {
     });
     setShowModal(true);
   };
-
   const handleUpdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedUser({
       ...selectedUser,
@@ -118,21 +119,18 @@ const Users = () => {
   };
   const handleUpdateSubmit = async () => {
     const payload: any = {
-      FirstName: EncryptFE(selectedUser.FirstName),
-      LastName: EncryptFE(selectedUser.LastName),
-      EmailID: EncryptFE(selectedUser.EmailID),
+      FirstName: selectedUser.FirstName?.trim() ? EncryptFE(selectedUser.FirstName) : null,
+      LastName: selectedUser.LastName?.trim() ? EncryptFE(selectedUser.LastName) : null,
+      EmailID: selectedUser.EmailID?.trim() ? EncryptFE(selectedUser.EmailID) : null,
+      ContactNumber: selectedUser.ContactNumber?.trim() ? EncryptFE(selectedUser.ContactNumber) : null,
     };
-
-    const id = selectedUser._id
+    const id = selectedUser._id;
     console.log("Updated user data:", payload);
-    const res = await UpdateUser(payload, id, token)
-    // TODO: Call your updateUser API here
+    const res = await UpdateUser(payload, id, token);
     console.log(res);
-    // await updateUser(payload, token);
     setShowModal(false);
     await GetUsers();
   };
-
   return (
     <div className=" ">
       {/* <Sidebar /> */}
@@ -154,7 +152,7 @@ const Users = () => {
               onClick={() => {
                 setCurrentPage(1);
                 GetUsers(1, usersPerPage);
-                setSearchQuery(""); // Only clear after a real search
+                // setSearchQuery("")
               }}
               // disabled={!searchQuery.trim()}
               className={`bg-[rgb(134,70,244)] text-white rounded-sm px-4 
@@ -209,12 +207,14 @@ const Users = () => {
                       {safeDecrypt(user.EmailID)}
                     </TableCell>
                     <TableCell className="flex gap-3 text-black text-left py-4 px-2">
-                      <button onClick={() => handleEditClick(user)}>
+                      <Button variant="ghost"
+                        size="icon" onClick={() => handleEdit(user)}>
                         <Pencil className="w-4 h-4 text-blue-500" />
-                      </button>
-                      <button onClick={() => handleDelete(user._id)}>
+                      </Button>
+                      <Button variant="ghost"
+                        size="icon" onClick={() => handleDelete(user._id)}>
                         <Trash2 className="w-4 h-4 text-red-500" />
-                      </button>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
@@ -320,6 +320,12 @@ const Users = () => {
                   name="EmailID"
                   placeholder="Email ID"
                   value={selectedUser.EmailID}
+                  onChange={handleUpdateChange}
+                />
+                <Input
+                  name="Contact No"
+                  placeholder="number"
+                  value={selectedUser.ContactNumber}
                   onChange={handleUpdateChange}
                 />
               </div>
